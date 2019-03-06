@@ -23,6 +23,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.wso2.carbon.databridge.commons.thrift.data.ThriftAttribute;
 import org.wso2.extension.siddhi.io.websocket.util.LoggerAppender;
 import org.wso2.extension.siddhi.io.websocket.util.LoggerCallback;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketServer;
@@ -135,6 +136,8 @@ public class WebSocketSourceTest {
                         "define stream FooStream1 (symbol string, price float, volume long); " +
                         "@info(name = 'query1') " +
                         "@sink(type='websocket', url = 'wss://localhost:7443/chat/abc', " +
+                        "truststore.path ='${carbon.home}/resources/conf/transports/client-truststore.jks' , " +
+                        "truststore.password='wso2carbon', " +
                         "@map(type='xml'))" +
                         "Define stream BarStream1 (symbol string, price float, volume long);" +
                         "from FooStream1 select symbol, price, volume insert into BarStream1;");

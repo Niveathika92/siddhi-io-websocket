@@ -19,19 +19,25 @@
 
 package org.wso2.extension.siddhi.io.websocket.source;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.extension.siddhi.io.websocket.util.WebSocketClientConnectorListener;
 import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
 import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
-import org.wso2.transport.http.netty.contract.websocket.HandshakeListener;
+import org.wso2.transport.http.netty.contract.websocket.ClientHandshakeListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnectorListener;
+import org.wso2.transport.http.netty.message.HttpCarbonResponse;
 
 /**
  * Future listener for WebSocket handshake.
  */
 
-public class WebSocketSourceHandshakeListener implements HandshakeListener {
+public class WebSocketSourceHandshakeListener implements ClientHandshakeListener {
     private SourceEventListener sourceEventListener;
     private WebSocketClientConnectorListener connectorListener;
+    private static final Logger log = LoggerFactory.getLogger(WebSocketSourceHandshakeListener.class);
+
 
     public WebSocketSourceHandshakeListener (WebSocketClientConnectorListener connectorListener,
                                             SourceEventListener sourceEventListener) {
@@ -39,12 +45,14 @@ public class WebSocketSourceHandshakeListener implements HandshakeListener {
         this.sourceEventListener = sourceEventListener;
     }
 
-    @Override public void onSuccess(WebSocketConnection webSocketConnection) {
+    @Override
+    public void onSuccess(WebSocketConnection webSocketConnection, HttpCarbonResponse response) {
         connectorListener.setSourceEventListener(sourceEventListener);
     }
 
-    @Override public void onError(Throwable throwable) {
+    @Override
+    public void onError(Throwable t, HttpCarbonResponse response) {
         throw new SiddhiAppRuntimeException("Error while connecting with the websocket server defined in '"
-                                                    + sourceEventListener + "'.", throwable);
+                + sourceEventListener + "'.", t);
     }
 }

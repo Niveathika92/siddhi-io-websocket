@@ -23,9 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketBinaryMessage;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketCloseMessage;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketConnection;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketConnectorListener;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketControlMessage;
-import org.wso2.transport.http.netty.contract.websocket.WebSocketInitMessage;
+import org.wso2.transport.http.netty.contract.websocket.WebSocketHandshaker;
 import org.wso2.transport.http.netty.contract.websocket.WebSocketTextMessage;
 
 /**
@@ -41,12 +42,14 @@ public class WebSocketClientConnectorListener implements WebSocketConnectorListe
     }
 
     @Override
-    public void onMessage(WebSocketInitMessage initMessage) {
+    public void onHandshake(WebSocketHandshaker webSocketHandshaker) {
+        System.out.print("WebSocketClientConnectorListener.... handshake success");
     }
 
     @Override
     public void onMessage(WebSocketTextMessage textMessage) {
         String receivedTextToClient = textMessage.getText();
+        System.out.print("Connector Listener.... " + receivedTextToClient);
         resultContainer.eventReceived(receivedTextToClient);
     }
 
@@ -58,18 +61,28 @@ public class WebSocketClientConnectorListener implements WebSocketConnectorListe
 
     @Override
     public void onMessage(WebSocketControlMessage controlMessage) {
+        System.out.print("Connector listener control messgae");
+
     }
 
     @Override
     public void onMessage(WebSocketCloseMessage closeMessage) {
+        System.out.print("Connector listener on message close");
     }
 
     @Override
-    public void onError(Throwable throwable) {
-        log.error("There is an error in the message format.", throwable);
+    public void onClose(WebSocketConnection webSocketConnection) {
+        System.out.print("Connector listener close");
+    }
+
+    @Override
+    public void onError(WebSocketConnection webSocketConnection, Throwable throwable) {
+        log.error("There is an error in the message format.", throwable.getMessage());
     }
 
     @Override
     public void onIdleTimeout(WebSocketControlMessage webSocketControlMessage) {
+        System.out.print("Connector listener Idle timeout");
+
     }
 }

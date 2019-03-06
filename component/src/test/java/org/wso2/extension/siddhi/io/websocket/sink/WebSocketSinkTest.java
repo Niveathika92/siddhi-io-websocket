@@ -34,6 +34,8 @@ import org.wso2.siddhi.core.exception.SiddhiAppCreationException;
 import org.wso2.siddhi.core.stream.input.InputHandler;
 import org.wso2.siddhi.query.api.exception.SiddhiAppValidationException;
 
+import javax.net.ssl.SSLException;
+import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class WebSocketSinkTest {
@@ -56,6 +58,7 @@ public class WebSocketSinkTest {
         SiddhiManager siddhiManager = new SiddhiManager();
         ResultContainer resultContainer = new ResultContainer(2);
         new WebSocketReceiver("ws://localhost:7070/chat/wso2", resultContainer);
+
         SiddhiAppRuntime executionPlanRuntime = siddhiManager.createSiddhiAppRuntime(
                 "@App:name('TestExecutionPlan') " +
                         "define stream FooStream1 (symbol string, age int, country string); " +
@@ -68,6 +71,7 @@ public class WebSocketSinkTest {
         executionPlanRuntime.start();
         fooStream.send(new Object[]{"JAMES", 23, "USA"});
         fooStream.send(new Object[]{"MIKE", 23, "Germany"});
+
         Assert.assertTrue(resultContainer.assertMessageContent("JAMES"));
         Assert.assertTrue(resultContainer.assertMessageContent("MIKE"));
         executionPlanRuntime.shutdown();

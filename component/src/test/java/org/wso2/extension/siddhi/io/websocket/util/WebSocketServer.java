@@ -20,6 +20,8 @@
 package org.wso2.extension.siddhi.io.websocket.util;
 
 import org.wso2.msf4j.MicroservicesRunner;
+import org.wso2.transport.http.netty.contract.config.ConfigurationBuilder;
+import org.wso2.transport.http.netty.contract.config.TransportsConfiguration;
 
 import java.io.File;
 
